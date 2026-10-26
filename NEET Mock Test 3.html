@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NEET Mock Test 3</title>
+<style>
+:root{--bg:#f7f6f2;--card:#fff;--tx:#1f2933;--mu:#667085;--bd:#e3e1da;--ac:#1d6fb8;--acx:#fff;--ok:#1a7f4b;--okb:#e3f4ea;--no:#b42318;--nob:#fde8e6;--sel:#e6f0fa;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#15181c;--card:#1f2429;--tx:#e8eaed;--mu:#9aa3ad;--bd:#333a42;--ac:#5aa9ec;--acx:#0b1620;--ok:#5fd39b;--okb:#17372a;--no:#ff8a80;--nob:#3d1d1a;--sel:#1b3550;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#15181c;--card:#1f2429;--tx:#e8eaed;--mu:#9aa3ad;--bd:#333a42;--ac:#5aa9ec;--acx:#0b1620;--ok:#5fd39b;--okb:#17372a;--no:#ff8a80;--nob:#3d1d1a;--sel:#1b3550;color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:720px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:18px;margin-bottom:14px}
+h1{font-size:1.5rem;margin:0 0 6px}h2{font-size:1.1rem;margin:0 0 10px}
+.mu{color:var(--mu);font-size:.92rem}
+button{font:inherit;cursor:pointer;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx);padding:10px 16px}
+button.p{background:var(--ac);color:var(--acx);border-color:var(--ac);font-weight:600}
+button:disabled{opacity:.45;cursor:default}
+.top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+.timer{font-weight:700;font-variant-numeric:tabular-nums}
+.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:12px 14px;border-radius:10px;border:1px solid var(--bd);background:var(--card)}
+.opt.sel{background:var(--sel);border-color:var(--ac)}
+.opt.ok{background:var(--okb);border-color:var(--ok)}
+.opt.no{background:var(--nob);border-color:var(--no)}
+.nav{display:flex;justify-content:space-between;gap:8px;margin-top:12px}
+.pal{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:6px}
+.pal button{padding:8px 0;font-size:.9rem}
+.pal .done{background:var(--sel);border-color:var(--ac)}
+.pal .cur{outline:2px solid var(--ac)}
+.pal .ok{background:var(--okb);border-color:var(--ok)}
+.pal .no{background:var(--nob);border-color:var(--no)}
+.score{font-size:2.2rem;font-weight:800}
+.stats{display:flex;gap:18px;flex-wrap:wrap;margin-top:8px}
+.ex{margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--bg);font-size:.93rem}
+.tag{font-weight:700}
+.hide{display:none}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<script>
+// ===== EDIT HERE: questions, marking and time =====
+const TITLE = "NEET Mock Test 3";
+const DURATION_MIN = 120;   // test time in minutes (2 hours)
+const MARKS_RIGHT = 4;     // NEET: +4 for correct
+const MARKS_WRONG = -1;    // NEET: -1 for wrong
+const Q=(q,options,answer,explain)=>({q,options,answer,explain});
+const AR=["Both Assertion and Reason are true and the reason is the correct explanation of the assertion","Both Assertion and Reason are true but the reason is not the correct explanation of the assertion","Assertion is true statement but Reason is false","Both Assertion and Reason are false statements"];
+const QUESTIONS = [
+Q("A balloon is going up with constant speed 15 m/s. A stone is dropped from the balloon after it reaches a height of 20 m. The maximum height attained by the stone with respect to the ground is",["20 m","11.25 m","8.75 m","31.25 m"],3,"The stone starts with 15 m/s upward, so it rises 15²/(2×10) = 11.25 m more. Maximum height = 20 + 11.25 = 31.25 m."),
+Q("A particle moving in the positive x direction has initial velocity u. The particle undergoes a retardation αv³, where v is the instantaneous velocity and α is a positive constant. The velocity of the particle as a function of time t is",["u/√(1+2uαt)","u/√(2uαt)","u/√(1+2u²αt)","u/√(2u²+1)"],2,"dv/dt = −αv³ gives 1/v² = 1/u² + 2αt, so v = u/√(1+2u²αt)."),
+Q("A man crosses a 320 m wide river in the shortest time of 40 s. If the velocity of water in the river is ½ times the velocity of the man, then the total displacement of the man in crossing the river is nearly",["320 m","600 m","358 m","500 m"],2,"Man’s speed = 320/40 = 8 m/s, water = 4 m/s, drift = 160 m. Displacement = √(320²+160²) ≈ 358 m."),
+Q("Considering density (d), frequency (f) and velocity (v) as fundamental quantities, the dimensional formula of force is",["[d f² v⁴]","[d f⁻² v⁴]","[d f² v⁻⁴]","[d⁻¹ f² v⁴]"],1,"Force = d^a f^b v^c: M gives a = 1, L gives −3 + c = 1 so c = 4, T gives −b − c = −2 so b = −2."),
+Q("The position–time graph of a particle is shown. [Figure: x–t graph, a parabola from the origin up to x = 4 m at t = 2 s, then a straight line falling to x = 0 at t = 6 s.] The velocity–time graph of the particle is given by",["v rises linearly from 0 to 4 m/s in 0–2 s, then stays constant at +4 m/s from 2 s to 6 s","v rises linearly from 0 to 1 m/s in 0–2 s, then is zero","v rises linearly from 0 to 4 m/s in 0–2 s, then stays constant at −1 m/s from 2 s to 6 s","v rises linearly from 0 to 4 m/s in 0–2 s, then stays constant at −2 m/s from 2 s to 6 s"],2,"x = t² up to 2 s, so v = 2t rises from 0 to 4 m/s. From 2 s to 6 s, x falls by 4 m in 4 s, so v = −1 m/s."),
+Q("The velocity of a moving particle varies with time as v = t² + 2t + 2 (v in m/s, t in s). If the position of the particle at t = 0 s is 2 m, then the position of the particle at t = 2 s will be",["32/3 m","10 m","38/3 m","40/3 m"],2,"x = t³/3 + t² + 2t + 2 = 8/3 + 4 + 4 + 2 = 38/3 m."),
+Q("For the given position–time equation t = α + βx², the acceleration is proportional to",["v","v²","v³","√v"],2,"v = 1/(2βx), so v ∝ 1/x. a = dv/dt = −1/(4β²x³) ∝ x⁻³ ∝ v³."),
+Q("The position vector of a particle moving in the x-y plane is r = 3t î + (3t² − 6t) ĵ, where distances are in metres and time in seconds. If the particle starts motion at t = 0, then the particle crosses the x axis at time t equal to",["t = 3 s","t = 0 s","t = 2 s","Both (2) and (3)"],3,"On the x axis, y = 0: 3t² − 6t = 0 gives t = 0 or t = 2 s."),
+Q("A river is flowing with a speed of 8 km/h. A swimmer wants to reach point R from P. [Figure: Q is the point on the far bank directly opposite P; R is further along the far bank in the direction of flow; PQ = QR = 800 m; θ is the swimmer’s angle with the river flow.] He swims with a speed of 8 km/h at an angle θ ≤ 90° with respect to the river flow. The value of θ is",["90°","60°","45°","30°"],0,"Velocity = (8 + 8cosθ, 8sinθ). To reach R, the x and y components must be equal: 8 + 8cosθ = 8sinθ, which holds at θ = 90°."),
+Q("A man is travelling in a roofless car with a velocity of 10.8 km/h. It is raining vertically downwards. He has to hold the umbrella at an angle 53° to the vertical to protect himself from rain. The actual velocity of the rain is (cos 53° = 3/5)",["3.75 m/s","2.25 m/s","0.50 m/s","2 m/s"],1,"Car speed = 3 m/s. tan 53° = 4/3 = 3/v_rain, so v_rain = 2.25 m/s."),
+Q("Three particles A, B and C are projected from the top of a tower with the same speed u horizontally, vertically downwards and vertically upwards respectively at the same time. Then",["All the three particles strike the ground simultaneously","All the particles strike the ground with the same speed","If T_A, T_B and T_C are their respective times of flight then T_C < T_B < T_A","If v_A, v_B and v_C are the respective speeds when they strike the ground then v_B < v_A < v_C"],1,"By energy conservation, all three reach the ground with the same speed. Times differ: T_B < T_A < T_C."),
+Q("A car travels with acceleration (4î + 5ĵ) m/s². If the initial velocity of the car is 4 m/s along the x direction, then the equation of the trajectory of the particle, if it is initially at the origin, is",["2y/5 = (x/4 − y/5)²","2y/5 = (x/5 + y/4)²","y/5 = (x/4 + y/5)²","y/5 = (x/4 − y/5)²"],0,"x = 4t + 2t², y = 2.5t². So t² = 2y/5 and t = x/4 − y/5, giving 2y/5 = (x/4 − y/5)²."),
+Q("If a vector is represented as A = (5î + 5ĵ), then the unit vector Â is",["î + ĵ","(î + ĵ)/√2","(4/5)î + (3/5)ĵ","î/2 + ĵ/3"],1,"|A| = 5√2, so Â = (î + ĵ)/√2."),
+Q("A particle is moving along a circular path of radius 8 m with increasing speed of 2t. The acceleration of the particle at t = 2 s is (g = 10 m/s²)",["2√2 m/s²","4 m/s²","2 m/s²","4√2 m/s²"],0,"v = 2t = 4 m/s at t = 2 s. Centripetal = 16/8 = 2, tangential = 2. Net = 2√2 m/s²."),
+Q("The velocity (v) versus displacement (x) plot of a body moving along a straight line is shown. [Figure: v rises linearly from 0 at x = 0 to a constant value at x₁, stays constant from x₁ to x₂, then falls linearly to 0 at x₃.] The corresponding plot of acceleration (a) as a function of displacement (x) is",["a rises linearly from 0 up to x₁, is zero from x₁ to x₂, then is negative with its magnitude falling linearly to zero at x₃","a falls linearly to zero between 0 and x₁, then again falls linearly to zero between x₂ and x₃, both above the axis","a is a positive constant up to x₁, zero from x₁ to x₂, then a negative constant up to x₃","a is a positive constant up to x₁, zero from x₁ to x₂, then a positive constant up to x₃"],0,"a = v dv/dx. Where v = kx, a = k²x (rising line). Where v is constant, a = 0. Where v falls linearly, a = −m·v, negative and shrinking to zero."),
+Q("A particle starts from rest with acceleration a. The variation of acceleration with time t is shown. [Figure: a = 10 m/s² at t = 0, falling linearly to 0 at t = 8 s and to −5 m/s² at t = 12 s.] The maximum velocity attained by the particle during its motion (from t = 0 to t = 12 s) is",["20 m/s","40 m/s","30 m/s","10 m/s"],1,"Velocity is maximum when a = 0, at t = 8 s. Area = ½ × 8 × 10 = 40 m/s."),
+Q("The deceleration experienced by a block under a force is given by a = −bv, where a = acceleration, v = velocity and b = constant. If v₀ is the magnitude of velocity at t = 0, find the velocity after time t.",["v₀","v₀/2","v₀ e^(−bt)","v₀/e^(−bt)"],2,"dv/dt = −bv gives v = v₀ e^(−bt)."),
+Q("A ball is dropped from the top of a building of height 100 m at time t = 0. At the same instant, another ball is thrown upwards with speed 50 m/s from the bottom of the building. The time at which the balls will meet is",["2 s","4 s","3 s","2.5 s"],0,"Relative speed = 50 m/s (accelerations cancel). Time = 100/50 = 2 s."),
+Q("The position (x) of a particle moving along the x-axis varies with time (t) as x = (t² − 6t + 3) m, where t is in seconds. The particle turns around at",["t = 2 s","t = 1 s","t = 4 s","t = 3 s"],3,"v = 2t − 6 = 0 at t = 3 s."),
+Q("The ratio of angular speed of the hour hand and the minute hand of a watch is",["1 : 12","1 : 3600","1 : 24","2 : 5"],0,"Hour hand takes 12 h per revolution, minute hand takes 1 h. Ratio = 1 : 12."),
+Q("A car is moving on a straight road and covers one third of the total distance with speed 25 km/h and the rest with speed 50 km/h. The average speed of the car is",["40 km/h","20 km/h","37.5 km/h","42.5 km/h"],2,"Time = (d/3)/25 + (2d/3)/50 = 2d/75. Average speed = 37.5 km/h."),
+Q("When a particle is thrown in a mud pond, it loses half of its speed after penetrating 3 cm into the mud. How much further will it penetrate before coming to rest? (Assume that the mud pond offers uniform retardation.)",["0.5 cm","1.0 cm","1.5 cm","2.0 cm"],1,"(u/2)² = u² − 2a(3) gives a = u²/8. Then 0 = (u/2)² − 2as gives s = 1 cm."),
+Q("A body is thrown vertically upwards. If constant air resistance is to be taken into account, the ratio of the time of descent to the time of ascent is [where a is the retardation by air resistance and g is the acceleration due to gravity]",["(g+a)/(g−a)","√((g+a)/(g−a))","(g+2a)/(g−2a)","√((2g+a)/(2g−a))"],1,"Going up, deceleration is g + a. Coming down, acceleration is g − a. Time ∝ 1/√(acceleration), so t_down/t_up = √((g+a)/(g−a))."),
+Q("Assertion (A): A unitless quantity cannot have non-zero dimension. Reason (R): A dimensionless quantity may have unit.",AR,1,"Both statements are true (for example, an angle in radians is dimensionless but has a unit), but R does not explain A."),
+Q("Assertion (A): A negative acceleration of a body can be associated with an increasing speed of the body. Reason (R): Acceleration is a vector physical quantity.",AR,1,"If velocity is negative and acceleration is negative, speed increases. R is true but does not explain A."),
+Q("Two particles having position vectors r₁ = (4î + 6ĵ) m and r₂ = (−3î + 4ĵ) m respectively are moving with velocities v₁ = (2î − 2ĵ) m/s and v₂ = (aî − ĵ) m/s. If they collide after 2 seconds, then the value of ‘a’ will be",["5/2","11/2","6","−5"],1,"At t = 2 s, r₁ = (8, 2) and r₂ = (−3 + 2a, 2). Equal x gives 8 = −3 + 2a, so a = 11/2."),
+Q("A car travels the first 40 km of its journey with a speed of 20 km/h, the next 60 km with a speed of 15 km/h and the next 60 km with a speed of v. If the average speed of the car is 20 km/h, then the value of v will be",["30 km/h","15 km/h","40 km/h","20 km/h"],0,"Total distance = 160 km, so total time = 8 h. 2 + 4 + 60/v = 8 gives v = 30 km/h."),
+Q("A bird flies for 2 seconds with a velocity of |t − 1| m/s in a straight line, where t is in seconds. It covers a distance of",["0.5 m","2 m","1 m","1.5 m"],2,"Distance = ∫₀² |t − 1| dt = 0.5 + 0.5 = 1 m."),
+Q("Car A is moving with speed 20 km/h in the east direction and car B is moving with speed 20 km/h in the north direction. The direction of the relative velocity of car A with respect to car B is",["South-west","North-east","South-east","North-west"],2,"v_AB = v_A − v_B = 20 east + 20 south, which points south-east."),
+Q("A particle is thrown horizontally with a speed of 10 m/s at t = 0 from a tower of height 100 m. Then the speed of the particle at t = 2 seconds is",["10 m/s","20 m/s","10√5 m/s","10√3 m/s"],2,"v_y = gt = 20 m/s, v_x = 10 m/s. Speed = √(100 + 400) = 10√5 m/s."),
+Q("The velocity–time graph for a car is semicircular as shown. [Figure: a semicircle-shaped curve from t = 0 to t = 4 s, with its peak at 4 m/s at t = 2 s.] Which of the following is correct?",["Car must move in a circular path","Acceleration of the car is never zero","The car takes a turn once during its motion","Mean speed of the particle is π m/s"],3,"The v–t shape says nothing about the path. The slope is zero at the peak, so acceleration is zero there. Area = ½π(2)(4) = 4π, so mean speed = 4π/4 = π m/s."),
+Q("Two cars A and B are moving with uniform velocity as shown. [Figure: car A is 30 m to the left of point O, moving towards O at 10 m/s. Car B is 40 m below O, moving upward towards O at 20 m/s.] The shortest distance between the two particles will be",["2 m","2√5 m","4√5 m","5√5 m"],2,"Separation² = (10t − 30)² + (40 − 20t)² = 500t² − 2200t + 2500. Minimum at t = 2.2 s gives 80, so the distance = √80 = 4√5 m."),
+Q("A particle moves with a velocity v = k(yî + xĵ), where k is a constant. The general equation of its path is",["y² = x² + constant","y = x² + constant","y² = x + constant","xy = constant"],0,"dy/dx = x/y, so y dy = x dx and y² = x² + c."),
+Q("A quantity y is given by y = ε₀ L (dV/dt), where ε₀ is the permittivity of free space, L is length, dV is a small potential difference and dt is a small time interval. The dimensional formula for y is the same as that of",["Electric charge","Electric field","Electric current","Velocity"],2,"ε₀L has the dimensions of capacitance. C × V = charge, so charge/time = current."),
+Q("A body is thrown vertically up with some velocity (at t = 0). It crosses a fixed point P in its path at t = 4 s and again at t = 6 s. The velocity of projection of the body will be (g = 10 m/s²)",["20 m/s","50 m/s","10 m/s","40 m/s"],1,"The top is reached at the midpoint of 4 s and 6 s, which is 5 s. u = gt = 50 m/s."),
+Q("The velocity (v) of a particle with position (x) is given as v = kx^(3/2). The acceleration (a) versus position (x) graph will be",["Straight line","Rectangular hyperbola","Circle","Parabola"],3,"a = v dv/dx = kx^(3/2) × (3/2)k x^(1/2) = (3/2)k²x², which is a parabola."),
+Q("A car is moving in the x-y plane on a track whose path is described by x² + y² = 16, where x and y are in metres. If the speed of the car is uniform and equal to 4 m/s, then the acceleration of the car will be",["4 m/s²","4√2 m/s²","2√2 m/s²","2 m/s²"],0,"Radius = 4 m. a = v²/r = 16/4 = 4 m/s²."),
+Q("If A = 4î + 4ĵ, after rotating A by 45° anticlockwise, the new vector obtained is",["4î","4ĵ","4√2 î","4√2 ĵ"],3,"A has magnitude 4√2 at 45°. Rotating by 45° puts it along +y with magnitude 4√2."),
+Q("If A = 3î + 4ĵ and B = 7î + 24ĵ, then the vector having the same magnitude as B and in the direction of A is",["15î + 20ĵ","20î + 15ĵ","(7/5)î + (24/25)ĵ","(24/25)î + (7/5)ĵ"],0,"|B| = 25. Unit vector of A = (3î + 4ĵ)/5, so the required vector = 15î + 20ĵ."),
+Q("The position (x) of a moving particle varies with time (t) as x = 1/(t+2)^(−3/2). The velocity of the particle is proportional to",["x","x^(5/2)","x^(1/2)","x^(1/3)"],3,"x = (t+2)^(3/2), so v = (3/2)(t+2)^(1/2) = (3/2)x^(1/3)."),
+Q("A projectile is projected at 10 m/s making an angle of 60° with the horizontal. After some time, its velocity makes an angle of 30° to the horizontal. Its speed at this instant is",["10/√3 m/s","10√3 m/s","5/√3 m/s","5√3 m/s"],0,"Horizontal component stays 10cos60° = 5 m/s. v cos30° = 5 gives v = 10/√3 m/s."),
+Q("A hunter aims towards a monkey hanging from the branch of a tree such that the monkey is in the range of the gun and directly in line with the muzzle of the hunter’s rifle. [Figure: a hunter aiming a rifle straight at a monkey hanging from a branch.] When the hunter pulls the trigger, the monkey falls from the branch at the same instant. Choose the correct statement.",["Bullet will hit the monkey","Bullet will not hit the monkey","Bullet will pass along the initial line of muzzle","Bullet will hit the monkey only if the monkey does not leave the branch"],0,"Both the bullet and the monkey fall by the same ½gt² below their straight-line paths, so the bullet hits the monkey."),
+Q("The measured values of the resistances of two wires are R₁ = (3 ± 0.09) Ω and R₂ = (6 ± 0.36) Ω. If they are connected in parallel, then the percentage error in the equivalent resistance is",["2%","8%","3%","4%"],3,"R = 2 Ω. ΔR = R²(ΔR₁/R₁² + ΔR₂/R₂²) = 4(0.01 + 0.01) = 0.08. Error = 0.08/2 × 100 = 4%."),
+Q("An object starts from rest, accelerates uniformly at 2 m/s² on a straight road for 10 seconds, then moves with uniform speed for the next 5 seconds and finally retards uniformly at 4 m/s². What is the distance covered during the whole journey?",["150 m","225 m","250 m","300 m"],2,"Phase 1: ½ × 2 × 100 = 100 m (v = 20 m/s). Phase 2: 20 × 5 = 100 m. Phase 3: 20²/(2 × 4) = 50 m. Total = 250 m."),
+Q("Assertion (A): The vertical component of velocity of a projectile projected horizontally from some height is directly proportional to time. Reason (R): Acceleration due to gravity is acting vertically, which is constant.",AR,0,"v_y = gt, and g is constant, so R correctly explains A."),
+Q("2 mol of ethane gas is burnt in sufficient oxygen supply and the evolved CO₂ is passed through a container in which 10 mol of potassium hydroxide is present. The final weight of the potassium hydroxide mixture after absorption of CO₂ is",["582 g","604 g","736 g","824 g"],2,"4 mol CO₂ + 8 mol KOH → 4 mol K₂CO₃ + 4 mol H₂O, with 2 mol KOH left. Mass = 552 + 72 + 112 = 736 g."),
+Q("The volume occupied by one molecule of water (density = 1 g cm⁻³) is",["18 cm³","1.8 × 10⁻²³ cm³","2.99 × 10⁻²⁰ cm³","2.99 × 10⁻²³ cm³"],3,"Volume of 1 mol = 18 cm³. Per molecule = 18/(6.022 × 10²³) = 2.99 × 10⁻²³ cm³."),
+Q("The total number of electrons present in 3.2 g of S²⁻ ion is",["1.6 N_A","1.8 N_A","2.4 N_A","1.2 N_A"],1,"3.2 g = 0.1 mol. Each S²⁻ has 18 electrons, so 1.8 N_A."),
+Q("The change in volume when 100 mL of carbon dioxide is passed over activated charcoal to form carbon monoxide is",["50 mL increase","50 mL decrease","100 mL increase","100 mL decrease"],2,"CO₂ + C → 2CO. 100 mL gives 200 mL, an increase of 100 mL."),
+Q("The mass of a dibasic acid (molar mass = 100 g/mol) that should be present in 100 mL of its aqueous solution with concentration 0.1 M is",["1 g","0.1 g","0.2 g","2 g"],0,"Moles = 0.1 × 0.1 = 0.01 mol. Mass = 0.01 × 100 = 1 g."),
+Q("An organic compound contains carbon, hydrogen and chlorine. If the percentages of H and Cl are 5.94% and 70.29% respectively, then the empirical formula of the compound is",["C₂H₅Cl","CH₃Cl","CHCl₃","CH₂Cl₂"],1,"C = 23.77%. Moles: C 1.98, H 5.94, Cl 1.98, so the ratio is 1 : 3 : 1, giving CH₃Cl."),
+Q("Consider the following statements: (a) 2 eggs have an infinite number of significant figures. (b) Zeros at the end of a number are always not significant. (c) 2.004 has 2 significant figures. The incorrect statement(s) is/are",["(a) and (b) only","(b) and (c) only","(b) only","(c) only"],1,"(a) is true because 2 is an exact count. (b) is false because zeros after a decimal point are significant. (c) is false because 2.004 has 4 significant figures."),
+Q("Match the following columns. Column I (Compound): a. Sulphuric acid, b. Ammonium sulphate, c. Sulphur dioxide, d. Calcium oxide. Column II (Percentage of oxygen): (i) 28.5%, (ii) 50%, (iii) 48.48%, (iv) 65.3%. Choose the correct option containing the most appropriate match.",["a(iii); b(i); c(iv); d(ii)","a(iii); b(i); c(ii); d(iv)","a(iv); b(iii); c(i); d(ii)","a(iv); b(iii); c(ii); d(i)"],3,"H₂SO₄: 64/98 = 65.3%. (NH₄)₂SO₄: 64/132 = 48.48%. SO₂: 32/64 = 50%. CaO: 16/56 = 28.5%."),
+Q("An enzyme contains 0.01% Zn by mass. The minimum molecular mass of the enzyme will be (atomic mass of Zn = 65.3 u)",["6.53 × 10⁵ u","6.53 × 10⁴ u","3.26 × 10⁵ u","3.26 × 10⁴ u"],0,"One Zn atom per enzyme molecule at minimum: 65.3/0.0001 = 6.53 × 10⁵ u."),
+Q("2 g of magnesium is burnt with 0.64 g of oxygen in a closed vessel. The mass of the excess reactant and the mass of the product formed respectively are",["0.31 g of O₂ and 2.33 g of MgO","1.04 g of O₂ and 1.6 g of MgO","0.4 g of Mg and 1.6 g of MgO","1.04 g of Mg and 1.6 g of MgO"],3,"0.02 mol O₂ reacts with 0.04 mol Mg (0.96 g). Excess Mg = 1.04 g. MgO formed = 0.04 × 40 = 1.6 g."),
+Q("Two elements X and Y combine to form two compounds X₂Y and X₂Y₃. If the atomic mass of X is 30 u and 0.05 mol of X₂Y₃ weighs 9 g, then the atomic mass of Y and the molecular mass of X₂Y respectively are",["30 u and 90 u","40 u and 110 u","40 u and 100 u","30 u and 100 u"],2,"M(X₂Y₃) = 9/0.05 = 180. 60 + 3Y = 180 gives Y = 40. M(X₂Y) = 60 + 40 = 100."),
+Q("50 mL of 34% (w/v) aqueous solution of AgNO₃ is mixed with 50 mL of 11.7% (w/v) aqueous solution of NaCl. The mass of the precipitate formed is (atomic mass of Ag = 108 u)",["35.70 g","14.35 g","17.85 g","28.70 g"],1,"AgNO₃ = 17 g = 0.1 mol. NaCl = 5.85 g = 0.1 mol. AgCl = 0.1 × 143.5 = 14.35 g."),
+Q("Match the following columns. Column I (Quantity): a. 1.8 g of water, b. 3.1 g of phosphorus (P₄), c. 1.6 g of sulphur, d. 9.2 g of nitrogen dioxide. Column II (Number of atoms): (i) 0.6 N_A, (ii) 0.05 N_A, (iii) 0.3 N_A, (iv) 0.1 N_A. Choose the option containing the most appropriate match.",["a(iii); b(ii); c(i); d(iv)","a(iv); b(i); c(ii); d(iii)","a(iii); b(iv); c(ii); d(i)","a(iv); b(iii); c(ii); d(i)"],2,"1.8 g water = 0.1 mol × 3 = 0.3 N_A. 3.1 g P₄ = 0.025 mol × 4 = 0.1 N_A. 1.6 g S = 0.05 N_A. 9.2 g NO₂ = 0.2 mol × 3 = 0.6 N_A."),
+Q("Consider the manufacture of ammonia by Haber’s process using 56 g of N₂ and 10 g of H₂ and read the given statements: (i) Hydrogen is the limiting reagent. (ii) The amount of excess reagent left unreacted is 6.33 g. (iii) The amount of ammonia formed is 68 g. Choose the incorrect statement(s).",["(i) and (ii) only","(iii) only","(i) and (iii) only","(ii) and (iii) only"],3,"N₂ = 2 mol and H₂ = 5 mol, so H₂ is limiting (i is correct). N₂ left = 56 − 46.67 = 9.33 g, not 6.33 g. NH₃ formed = (10/3) × 17 = 56.67 g, not 68 g."),
+Q("Choose the incorrect statement.",["The mass of an atom of hydrogen is nearly 1.67 × 10⁻²⁴ g","1 amu = 1.66 × 10⁻²⁴ g","One mole is the amount of substance that contains exactly the same number of entities as the number of atoms present in 12 g of the C-14 isotope of carbon","The mass of an atom of C-12 is 1.99 × 10⁻²³ g"],2,"The mole is defined using 12 g of the C-12 isotope, not C-14."),
+Q("An element E occurs in nature in the form of two isotopes E₁ and E₂ with atomic masses 14 u and 15 u respectively. If the average atomic mass of the element is 14.80 u, then the percentage abundance of the lighter isotope will be",["10%","15%","20%","25%"],2,"14x + 15(1 − x) = 14.8 gives x = 0.2, so 20%."),
+Q("The term formula mass is applicable to all of the following compounds, except",["Sodium chloride","Calcium chloride","Potassium chloride","Carbon tetrachloride"],3,"Carbon tetrachloride is a molecular compound, so molecular mass is used. Ionic compounds use formula mass."),
+Q("The molarity of a 98% (w/v) solution of H₂SO₄ will be",["10 M","18 M","9 M","1 M"],0,"98 g in 100 mL = 1 mol in 0.1 L = 10 M."),
+Q("The number of oxygen molecules required to prepare 90 g of water using a sufficient supply of hydrogen gas, according to 2H₂(g) + O₂(g) → 2H₂O(g), is",["N_A molecules","2 N_A molecules","1.5 N_A molecules","2.5 N_A molecules"],3,"90 g = 5 mol H₂O, which needs 2.5 mol O₂ = 2.5 N_A molecules."),
+Q("10.6 g of Na₂CO₃ is dissolved in enough water to make a final volume of 250 mL of solution. If Na₂CO₃ dissociates completely, the molar concentrations of Na⁺ and CO₃²⁻ ions respectively are",["0.4 M and 0.2 M","0.2 M and 0.4 M","0.8 M and 0.4 M","0.4 M and 0.8 M"],2,"0.1 mol in 0.25 L = 0.4 M Na₂CO₃, giving Na⁺ = 0.8 M and CO₃²⁻ = 0.4 M."),
+Q("The mole fraction of the solvent in a 2 molal aqueous solution is",["0.04","0.08","0.82","0.96"],3,"1000 g water = 55.5 mol. x = 55.5/(55.5 + 2) = 0.965 ≈ 0.96."),
+Q("An air sample contains nearly 78% (w/w) N₂ gas. The approximate number of nitrogen molecules in one kg of air under standard conditions is",["1.67 × 10²³","2.85 × 10²⁵","2.85 × 10²³","1.68 × 10²⁵"],3,"780 g N₂ = 27.86 mol × 6.022 × 10²³ = 1.68 × 10²⁵ molecules."),
+Q("Consider the following sets of species: (a) N₂O, CO₂, O₃ (b) Ca²⁺, Ar, K⁺ (c) Na⁺, O²⁻, NO⁺ (d) N₂, NO⁺, CO. The set(s) containing isoelectronic species is/are",["(a) and (b) only","(b) and (d) only","(b) only","(c) and (d) only"],1,"(b): all have 18 electrons. (d): all have 14 electrons. (a) has 22, 22 and 24, and (c) has 10, 10 and 14, so neither is isoelectronic."),
+Q("The energy of an electron in the ground state of the He⁺ ion is −a J. Then the energy of an electron in the n = 2 state for the Li²⁺ ion in joules is",["−4a/9","−9a/16","−16a/9","−2a/3"],1,"E ∝ Z²/n². He⁺ ground state: 4/1. Li²⁺ at n = 2: 9/4. Ratio = (9/4)/4 = 9/16, so E = −9a/16."),
+Q("Consider the following statements about cathode rays: (i) The cathode rays move from cathode to anode. (ii) Cathode rays travel in a straight line and do not get affected by electric or magnetic fields. (iii) The characteristics of cathode rays depend upon the nature of the gas taken in the cathode ray discharge tube. The incorrect statement(s) about cathode rays is/are",["(i) and (iii) only","(ii) only","(ii) and (iii) only","(iii) only"],2,"Cathode rays are deflected by electric and magnetic fields (ii is wrong). Their properties do not depend on the gas (iii is wrong)."),
+Q("The wave number of the radiation of the H-atom in the visible region with minimum wavelength is",["1.33 × 10⁴ cm⁻¹","2.7 × 10⁶ cm⁻¹","1.33 × 10⁶ cm⁻¹","2.7 × 10⁴ cm⁻¹"],3,"The minimum wavelength in the Balmer series is its series limit: wave number = R/4 = 1.097 × 10⁷/4 m⁻¹ ≈ 2.7 × 10⁴ cm⁻¹."),
+Q("Consider the following phenomena: (a) Diffraction (b) Interference (c) Black-body radiation (d) Photoelectric effect. The number of phenomena that cannot be explained by the particle nature of electromagnetic radiation is/are",["1","2","3","4"],1,"Diffraction and interference need the wave nature. Black-body radiation and the photoelectric effect are explained by the particle nature."),
+Q("If the radius of the second Bohr orbit of the He⁺ ion is 105.5 pm, then the radius of the third Bohr orbit of the Be³⁺ ion is approximately",["108 pm","148 pm","119 pm","102 pm"],2,"r ∝ n²/Z. He⁺ (n = 2): 4/2 = 2. Be³⁺ (n = 3): 9/4 = 2.25. r = 105.5 × 2.25/2 ≈ 119 pm."),
+Q("Choose the statement which is incorrect regarding the conclusions drawn by Rutherford after the α-particle scattering experiment.",["Most of the space in the atom is empty","The positive charge is concentrated in a very small volume","The volume occupied by the nucleus is negligibly small as compared to the total volume of the atom","Electrons revolve around the nucleus in shells of specified energy and radius"],3,"Shells of specified energy and radius are part of Bohr’s model, not Rutherford’s conclusions."),
+Q("Match the following columns. Column I: a. Number of subshells in a principal shell, b. Number of orbitals in a shell, c. Number of orbitals in a subshell, d. Maximum number of electrons in a shell. Column II: (i) n², (ii) n, (iii) (2l + 1), (iv) 2n². Choose the appropriate match.",["a(ii); b(iv); c(i); d(iii)","a(ii); b(i); c(iii); d(iv)","a(iv); b(iii); c(i); d(ii)","a(iv); b(iii); c(ii); d(i)"],1,"Subshells = n. Orbitals in a shell = n². Orbitals in a subshell = 2l + 1. Electrons in a shell = 2n²."),
+Q("Given below are two statements. Statement I: The energy of the orbital with quantum numbers n = 2, l = 0 is lower than the energy of the orbitals associated with the quantum numbers n = 2, l = 1 for the hydrogen atom. Statement II: The energy of the orbital represented by quantum numbers n = 2, l = 1 for the potassium atom is higher than the energy of the same orbital for the sodium atom. In the light of the above statements, choose the correct option.",["Both Statement I and Statement II are correct","Both Statement I and Statement II are incorrect","Statement I is correct but Statement II is incorrect","Statement I is incorrect but Statement II is correct"],1,"In hydrogen, 2s and 2p have equal energy (I is wrong). The 2p orbital in K is at lower energy than in Na because of the greater nuclear charge (II is wrong)."),
+Q("Which of the given transitions in the hydrogen spectrum will give rise to a photon of maximum energy?",["n = 5 to n = 4","n = 4 to n = 1","n = 3 to n = 2","n = 2 to n = 1"],1,"n = 4 → 1 gives 13.6(1 − 1/16) = 12.75 eV, more than n = 2 → 1 (10.2 eV)."),
+Q("The ratio of the wavelength of the third line of the Balmer series to the first line of the Lyman series of the H-atom is",["5 : 14","21 : 28","25 : 7","15 : 7"],2,"Third Balmer line (5 → 2): 1/λ = 21R/100. First Lyman line (2 → 1): 1/λ = 3R/4. Ratio = (100/21)/(4/3) = 25/7."),
+Q("Consider the following sets of quantum numbers (n, l, mₗ, s): (a) 2, 1, −2, +½ (b) 4, 3, −2, −½ (c) 3, 2, +2, −½ (d) 3, 3, −2, +½. Which of the above sets of quantum numbers is/are not possible?",["(a) and (b) only","(b) and (c) only","(d) only","(a) and (d) only"],3,"(a) is not possible because mₗ = −2 needs l ≥ 2 and here l = 1. (d) is not possible because l must be less than n."),
+Q("Given below are two statements. Statement I: The number of angular nodes present in the 5d_xy orbital is two. Statement II: The number of radial nodes present in the 4p orbital is two. In the light of the above statements, choose the correct option.",["Statement I is incorrect but Statement II is correct","Statement I is correct but Statement II is incorrect","Both Statement I and Statement II are incorrect","Both Statement I and Statement II are correct"],3,"Angular nodes = l = 2 for d. Radial nodes of 4p = n − l − 1 = 2."),
+Q("If an electron is moving with a velocity of 3 × 10⁴ m/s with an uncertainty of 0.02%, then the uncertainty in position will be approximately (mass of electron = 9 × 10⁻³¹ kg)",["6.02 × 10⁻³ m","6.02 × 10⁻⁵ m","9.77 × 10⁻⁴ m","9.77 × 10⁻⁶ m"],3,"Δv = 0.02% of 3 × 10⁴ = 6 m/s. Δx = h/(4πmΔv) = 6.626 × 10⁻³⁴/(4π × 9 × 10⁻³¹ × 6) ≈ 9.77 × 10⁻⁶ m."),
+Q("The maximum number of electrons with quantum numbers n = 3, l = 2 and s = +½ is",["3","6","5","10"],2,"For l = 2 there are 5 values of mₗ, each with one electron of s = +½."),
+Q("If for a particle of mass 0.1 kg the de Broglie wavelength is 3.3 × 10⁻³⁰ m, then the value of the velocity of the particle will be",["2 × 10⁻² m/s","2 m/s","2 × 10⁻³ m/s","2 × 10² m/s"],2,"v = h/(mλ) = 6.626 × 10⁻³⁴/(0.1 × 3.3 × 10⁻³⁰) = 2 × 10⁻³ m/s."),
+Q("Consider the following statements: A. The energy of electrons in an atom is quantized. B. The path of an electron in an atom can never be determined accurately. C. An atomic orbital is the wave function ψ for an electron in an atom. D. An orbital cannot accommodate more than two electrons. E. The probability of finding an electron at a point within an atom is inversely proportional to the orbital wave function. Which of the above statements is/are incorrect with respect to the features of the quantum mechanical model of the atom?",["C and D only","B, C, D and E only","A, D and E only","E only"],3,"Probability is proportional to ψ² (directly), not inversely proportional to ψ. All other statements are correct."),
+Q("Match the following columns. Column I (Quantum number): a. n, b. l, c. mₗ, d. mₛ. Column II (Information provided): (i) Orientation of orbital, (ii) Size of orbital, (iii) Spin of electron, (iv) Shape of orbital. Choose the most appropriate match from the options given below.",["a(ii); b(iv); c(i); d(iii)","a(i); b(ii); c(iv); d(iii)","a(iii); b(ii); c(iv); d(i)","a(iii); b(iv); c(ii); d(i)"],0,"n gives size, l gives shape, mₗ gives orientation, mₛ gives spin."),
+Q("Match the following electronic configurations given in Column I with the possible number of exchanges given in Column II. Column I: a. 3d⁵, b. 3d⁴, c. 3d³, d. 3d². Column II: (i) 1, (ii) 3, (iii) 6, (iv) 10. Choose the most appropriate match from the options given below.",["a(i); b(iii); c(ii); d(iv)","a(ii); b(i); c(iv); d(iii)","a(iii); b(iv); c(i); d(ii)","a(iv); b(iii); c(ii); d(i)"],3,"Exchanges among n parallel-spin electrons = n(n − 1)/2: 3d⁵ gives 10, 3d⁴ gives 6, 3d³ gives 3, 3d² gives 1."),
+Q("The pair of d orbitals which have electron density along the axes is",["d_z², d_xy","d_xz, d_z²","d_z², d_x²−y²","d_x²−y², d_zy"],2,"d_z² and d_x²−y² have lobes along the axes. d_xy, d_xz and d_yz have lobes between the axes."),
+Q("Match List I with List II. List I (Orbital): a. 2s, b. 3s, c. 2p, d. 3d. List II (Quantum numbers): (i) n = 2, l = 1, (ii) n = 3, l = 0, (iii) n = 3, l = 2, (iv) n = 2, l = 0. Choose the correct answer from the options given below.",["a(iii); b(i); c(ii); d(iv)","a(i); b(iii); c(iv); d(ii)","a(iv); b(ii); c(i); d(iii)","a(ii); b(iii); c(iv); d(i)"],2,"2s: n = 2, l = 0. 3s: n = 3, l = 0. 2p: n = 2, l = 1. 3d: n = 3, l = 2."),
+Q("Choose the incorrect match.",["Lyman series – IR","Balmer series – Visible","Paschen series – IR","Pfund series – IR"],0,"The Lyman series lies in the ultraviolet region, not infrared."),
+Q("Consider the following: A. 12 g of H₂ B. 160 g of NaOH C. 176 g of CO₂ D. 248 g of Na₂O E. 200 g of CaCO₃. Choose the option containing the sets in which an equal number of atoms are present.",["B and C only","A, B, C and D only","A, C and D only","A, B, C, D and E"],1,"A: 6 mol × 2 = 12 N_A. B: 4 mol × 3 = 12 N_A. C: 4 mol × 3 = 12 N_A. D: 4 mol × 3 = 12 N_A. E: 2 mol × 5 = 10 N_A.")
+];
+// ==================================================
+
+const app = document.getElementById("app");
+let cur = 0, ans = [], left = DURATION_MIN * 60, tick = null, submitted = false;
+
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function fmt(s){const m=Math.floor(s/60),r=s%60;return String(m).padStart(2,"0")+":"+String(r).padStart(2,"0");}
+const L = ["A","B","C","D","E","F"];
+
+function start(){
+  ans = QUESTIONS.map(()=>null); cur = 0; left = DURATION_MIN*60; submitted = false;
+  clearInterval(tick);
+  tick = setInterval(()=>{
+    left--;
+    const t = document.getElementById("t"); if(t) t.textContent = fmt(Math.max(left,0));
+    if(left<=0) submit(true);
+  },1000);
+  renderTest();
+}
+
+function home(){
+  app.innerHTML = `<div class="card"><h1>${esc(TITLE)}</h1>
+  <p class="mu">${QUESTIONS.length} questions · ${DURATION_MIN} minutes · +${MARKS_RIGHT} for each correct answer, ${MARKS_WRONG} for each wrong answer, 0 if left blank.</p>
+  <p>Pick one option for each question. You can move between questions and change answers until you submit. The correct answers are shown after you submit.</p>
+  <button class="p" id="go">Start test</button></div>`;
+  document.getElementById("go").onclick = start;
+}
+
+function renderTest(){
+  const q = QUESTIONS[cur];
+  const pal = QUESTIONS.map((_,i)=>`<button data-i="${i}" class="${ans[i]!==null?"done":""} ${i===cur?"cur":""}">${i+1}</button>`).join("");
+  app.innerHTML = `
+  <div class="top"><span class="mu">Question ${cur+1} of ${QUESTIONS.length}</span><span class="timer" id="t">${fmt(Math.max(left,0))}</span></div>
+  <div class="card"><h2>${esc(q.q)}</h2>
+  ${q.options.map((o,i)=>`<button class="opt ${ans[cur]===i?"sel":""}" data-o="${i}"><b>${L[i]}.</b> ${esc(o)}</button>`).join("")}
+  <div class="nav"><button id="prev" ${cur===0?"disabled":""}>Previous</button><button id="clr">Clear</button><button id="next" ${cur===QUESTIONS.length-1?"disabled":""}>Next</button></div></div>
+  <div class="card"><div class="pal">${pal}</div></div>
+  <button class="p" id="sub" style="width:100%">Submit test</button>`;
+  app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{ans[cur]=+b.dataset.o;renderTest();});
+  app.querySelectorAll(".pal button").forEach(b=>b.onclick=()=>{cur=+b.dataset.i;renderTest();});
+  document.getElementById("prev").onclick=()=>{cur--;renderTest();};
+  document.getElementById("next").onclick=()=>{cur++;renderTest();};
+  document.getElementById("clr").onclick=()=>{ans[cur]=null;renderTest();};
+  document.getElementById("sub").onclick=()=>{
+    const un = ans.filter(a=>a===null).length;
+    const box=document.createElement("div"); box.style.cssText="position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:center;justify-content:center;padding:16px;z-index:50"; box.innerHTML=`<div class="card" style="max-width:380px;margin:0"><h2>Submit test?</h2><p class="mu">${un?`You have ${un} unanswered question(s).`:"You have answered all questions."} You can’t change answers after submitting.</p><div class="nav"><button id="cn">Go back</button><button class="p" id="cy">Yes, submit</button></div></div>`; document.body.appendChild(box); document.getElementById("cn").onclick=()=>box.remove(); document.getElementById("cy").onclick=()=>{box.remove(); submit(false);};
+  };
+}
+
+function submit(auto){
+  if(submitted) return; submitted = true; clearInterval(tick);
+  let right=0,wrong=0,blank=0;
+  QUESTIONS.forEach((q,i)=>{ if(ans[i]===null) blank++; else if(ans[i]===q.answer) right++; else wrong++; });
+  const score = right*MARKS_RIGHT + wrong*MARKS_WRONG, max = QUESTIONS.length*MARKS_RIGHT, pct = Math.max(0, Math.round(score/max*1000)/10);
+  const review = QUESTIONS.map((q,i)=>{
+    const st = ans[i]===null ? "Not answered" : ans[i]===q.answer ? "Correct" : "Wrong";
+    return `<div class="card"><div class="mu">Question ${i+1} · <span class="tag" style="color:${st==="Correct"?"var(--ok)":st==="Wrong"?"var(--no)":"var(--mu)"}">${st}</span></div>
+    <h2>${esc(q.q)}</h2>
+    ${q.options.map((o,j)=>`<div class="opt ${j===q.answer?"ok":(j===ans[i]?"no":"")}"><b>${L[j]}.</b> ${esc(o)}${j===q.answer?" ✔":""}${j===ans[i]&&j!==q.answer?" (your answer)":""}</div>`).join("")}
+    ${ans[i]!==q.answer?`<div class="ex"><b>Correct answer:</b> ${L[q.answer]}. ${esc(q.options[q.answer])}</div>`:""}${q.explain?`<div class="ex"><b>Explanation:</b> ${esc(q.explain)}</div>`:""}</div>`;
+  }).join("");
+  app.innerHTML = `<div class="card"><h1>Test submitted${auto?" (time up)":""}</h1>
+  <div class="score">${pct}%</div><div class="mu">Marks: ${score} out of ${max}</div>
+  <div class="stats"><span>✔ Correct: <b>${right}</b></span><span>✘ Wrong: <b>${wrong}</b></span><span>– Skipped: <b>${blank}</b></span></div>
+  <p class="mu">Scroll down to see the correct answers.</p><button class="p" id="again">Retake test</button></div>${review}`;
+  document.getElementById("again").onclick = start;
+  window.scrollTo(0,0);
+}
+
+home();
+</script>
+</body>
+</html>
